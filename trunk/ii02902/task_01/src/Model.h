@@ -1,8 +1,13 @@
 #pragma once
 
 class Model {
-protected:
+private:
     double m_y{0.0};
+
+protected:
+    void setY(double next_val) noexcept { 
+        m_y = next_val; 
+    }
 
 public:
     Model() = default;
@@ -13,10 +18,6 @@ public:
 
     [[nodiscard]] double getY() const noexcept { 
         return m_y; 
-    }
-    
-    void setY(double next_val) noexcept { 
-        m_y = next_val; 
     }
     
     virtual void reset(double start_val = 0.0) { 

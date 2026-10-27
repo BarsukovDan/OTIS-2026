@@ -23,8 +23,8 @@ std::string InputSignal::getSignalName(SignalType sig_type) {
         "Harmonic"
     };
 
-    const auto idx = static_cast<size_t>(sig_type);
-    if (idx < names.size()) {
+    // Объявили idx прямо внутри условия if (C++17 init-statement) для SonarCloud (cpp:S6004)
+    if (const auto idx = static_cast<size_t>(sig_type); idx < names.size()) {
         return names[idx];
     }
     return "Unknown";

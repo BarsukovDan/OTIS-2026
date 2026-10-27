@@ -23,10 +23,9 @@ T promptValue(const std::string& prompt, T default_value, T min_v = {}, T max_v 
     if (std::string input; std::getline(std::cin, input) && !input.empty()) {
         std::stringstream ss(input);
         T val;
-        if (ss >> val) {
-            if (!check_range || (val >= min_v && val <= max_v)) {
-                return val;
-            }
+        // Объединили вложенные if в одно условие для SonarCloud (cpp:S51066)
+        if (ss >> val && (!check_range || (val >= min_v && val <= max_v))) {
+            return val;
         }
     }
     return default_value;
