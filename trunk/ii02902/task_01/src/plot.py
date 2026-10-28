@@ -1,4 +1,3 @@
-
 import sys
 sys.path.append(r"D:\lib\site-packages")
 import os
@@ -16,30 +15,36 @@ df = pd.read_csv(csv_path)
 
 plt.figure(figsize=(10, 5))
 
-# График выходного сигнала y от времени (step)
-plt.subplot(1, 2, 1)
-plt.plot(df['step'], df['y'], marker='o', color='b', label='Output y')
-plt.title(f"Model: {df['model_name'].iloc[0]} ({df['signal'].iloc[0]})+")
-plt.xlabel("Шаг (step)")
-plt.ylabel("Выход y")
-plt.grid(True)
-plt.legend()
+# Создаем основную ось для выхода y
+fig, ax1 = plt.subplots(figsize=(10, 5))
 
-# График входного сигнала u от времени
-plt.subplot(1, 2, 2)
-plt.plot(df['step'], df['u'], marker='x', color='r', label='Input u')
-plt.title("Входной сигнал")
-plt.xlabel("Шаг (step)")
-plt.ylabel("Вход u")
-plt.grid(True)
-plt.legend()
+model_title = df['model_name'].iloc[0] if 'model_name' in df.columns else "Model"
+signal_title = df['signal'].iloc[0] if 'signal' in df.columns else "Signal"
+
+ax1.set_title(f"Моделирование: {model_title} ({signal_title})")
+ax1.set_xlabel("Шаг (step)")
+ax1.set_ylabel("Выход y", color='b')
+line1 = ax1.plot(df['step'], df['y'], marker='o', color='b', label='Output y')
+ax1.tick_params(axis='y', labelcolor='b')
+ax1.grid(True)
+
+# Создаем вторую ось (twinx) для входного сигнала u, чтобы они не перекрывали друг друга по масштабу
+ax2 = ax1.twinx()
+ax2.set_ylabel("Вход u", color='r')
+line2 = ax2.plot(df['step'], df['u'], marker='x', color='r', linestyle='--', label='Input u')
+ax2.tick_params(axis='y', labelcolor='r')
+
+# Объединяем легенды с обеих осей в одно окошко
+lines = line1 + line2
+labels = [l.get_label() for l in lines]
+ax1.legend(lines, labels, loc='upper left')
 
 plt.tight_layout()
 
-# Сохраняем графики в папку doc (если она есть) и в корень проекта для отчёта
+# Сохраняем графики в папку doc и в корень проекта для отчёта (используем имя plot_task01.png, как в README)
 os.makedirs("doc", exist_ok=True)
 plt.savefig("doc/plot.png")
 plt.savefig("plot_task01.png")
 
 # Показываем окно с графиком
-plt.show()
+plt.show()  
